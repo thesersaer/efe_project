@@ -1,0 +1,7 @@
+Mapa / espacio toroidal (y tiempo?)
+Big bang / t0 produce velocidades de points of interest
+Movimiento y viajes a v cte.
+Dos modos:
+
+1. Zoom-in, local y v << c (accel!)
+2. Zoom-out, relativista y v ~ c (accel. nula)
