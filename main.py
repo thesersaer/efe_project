@@ -1,47 +1,38 @@
-import matplotlib.pyplot as plt
-import numpy as np
+import typing
+import pygame
+import constants
 
-c = 1
-
-class WorldArrow:
-    """
-    Coordinate system: absolute
-    t, x, y : time, right-increasing horizontal coordinate, up-increasing vertical component
-    """
-
+class Game:
     def __init__(self):
-        """
-        np.array _s_vector
-        world vector describing basic components
-        """
-        self._s_vector = np.array([[0.],
-                                   [0.],
-                                   [0.]])
+        pygame.init()
+        self._clock = Clock()
+        self._screen = Screen()
+        self.is_running = False
 
-        """
-        np.array _v_vector
-        world speed vector, normalized, time derivative of _s_vector
-        """
-        self._v_vector = np.array([[0.],
-                                   [0.],
-                                   [0.]])
+    def start(self):
+        self.is_running = True
 
-    @property
-    def s_vector(self):
-        return self._s_vector
+    def stop(self):
+        self.is_running = False
 
-    def lorentz_transform(self, vel):
-        lorentz_factor = (1 - vel ** 2) ** -0.5
-        lorentz_matrix = np.array([[1, -vel, 0],
-                                   [-vel, 1, 0],
-                                   [0, 0, 1]])
-        print(lorentz_factor)
-        print(lorentz_matrix)
-        print(lorentz_factor * lorentz_matrix)
-        return lorentz_factor * lorentz_matrix @ self._s_vector
+    def loop(self):
+        while self.is_running:
+            self._clock.tick()
+            # Event processing
+            # Physics update / catch-up
+            # Rendering
 
-if __name__ == '__main__':
-    wa = WorldArrow()
-    print(wa.v_vector)
-    wa.lorentz_transform(0.5)
-    print(wa.v_vector)
+
+class Clock:
+    def __init__(self):
+        self._clock = pygame.time.Clock()
+        self._lag = 0
+
+    def tick(self) -> int:
+        elapsed = self._clock.tick(constants.RENDER_FRAME_RATE)
+        self._lag += elapsed
+        return elapsed
+
+class Screen:
+    def __init__(self):
+        self._screen = pygame.display.set_mode(constants.DISPLAY_RESOLUTION)
