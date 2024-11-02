@@ -45,8 +45,13 @@ class SpeedArrow:
 class LorentzTransformation:
     def __init__(self, v_x = 0, v_y = 0):
         self.lorentz_matrix = None
+        self._velocity = (v_x, v_y)
 
         self.set_frame_vel(v_x, v_y)
+
+    @property
+    def velocity(self):
+        return self._velocity
 
     def set_frame_vel(self, v_x, v_y):
         v_mod = (v_x ** 2 + v_y ** 2) ** 0.5
