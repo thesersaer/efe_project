@@ -1,6 +1,6 @@
 import pygame
 
-from constants import RESOLUTION_X, RESOLUTION_Y, GRID_SIZE, GRID_COLOR
+from constants import RESOLUTION_X, RESOLUTION_Y, GRID_SIZE, GRID_COLOR, PLAYER_X_RATIO, PLAYER_Y_RATIO
 from game.objects import DynamicObject, StaticObject
 
 
@@ -9,6 +9,15 @@ class Actor(DynamicObject):
     def __init__(self, *groups):
 
         DynamicObject.__init__(self,'game/sprites/shipBig.png', *groups)
+
+
+class Player(Actor):
+
+    def __init__(self, *groups):
+
+        Actor.__init__(self, *groups)
+
+        self.rect.center = (PLAYER_X_RATIO * RESOLUTION_X, PLAYER_Y_RATIO * RESOLUTION_Y)
 
 
 class Grid(StaticObject):

@@ -1,10 +1,12 @@
+from typing import Union
+
 import pygame
 
-class SpriteI:
+class ISprite:
     """
     Base Interface for pygame Sprite class
     """
-    def __init__(self, source: str | tuple[int, int]):
+    def __init__(self, source: Union[str, tuple[int, int]]):
         """
 
         :param source: Either the sprite path in str or the size of the rect in px
@@ -23,24 +25,24 @@ class SpriteI:
         pass
 
 
-class Sprite(pygame.sprite.Sprite, SpriteI):
+class Sprite(pygame.sprite.Sprite, ISprite):
 
     def __init__(self,
-                 source: str | tuple[int, int],
+                 source: Union[str, tuple[int, int]],
                  *groups: pygame.sprite.AbstractGroup):
 
         pygame.sprite.Sprite.__init__(self, *groups)
 
-        SpriteI.__init__(self, source)
+        ISprite.__init__(self, source)
 
 
-class DirtySprite(pygame.sprite.DirtySprite, SpriteI):
+class DirtySprite(pygame.sprite.DirtySprite, ISprite):
 
     def __init__(self, source, *groups):
 
         pygame.sprite.DirtySprite.__init__(self, *groups)
 
-        SpriteI.__init__(self, source)
+        ISprite.__init__(self, source)
 
 
 

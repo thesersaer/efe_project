@@ -1,6 +1,38 @@
+import numpy as np
 import pygame
 
 from constants import PHYSICS_TIMESTEP_MS as DT
+
+
+class ISpace:
+    """
+    Default implementation of a reference system
+    """
+
+    def __init__(self):
+
+        pass
+
+
+    def rotate(self, vector):
+
+        pass
+
+
+    def translate(self, vector):
+
+        pass
+
+    def scale(self, vector):
+
+        pass
+
+
+class BaseSpace(ISpace):
+
+    def __init__(self):
+
+        ISpace.__init__(self)
 
 
 class Vector3(pygame.math.Vector3):
@@ -21,7 +53,7 @@ class Velocity(Vector3):
     pass
 
 
-class MathI:
+class IMath:
 
     def __init__(self, rect: pygame.Rect):
 
@@ -35,11 +67,11 @@ class MathI:
         self.rect.center = (self.position.y, self.position.z)
 
 
-class Physics(MathI):
+class Physics(IMath):
 
     def __init__(self, rect):
 
-        MathI.__init__(self, rect)
+        IMath.__init__(self, rect)
 
         self.velocity = Velocity()
 
@@ -48,11 +80,11 @@ class Physics(MathI):
         pass
 
 
-class Logic(MathI):
+class Logic(IMath):
 
     def __init__(self, rect):
 
-        MathI.__init__(self, rect)
+        IMath.__init__(self, rect)
 
 if __name__ == '__main__':
     foo = Physics()

@@ -1,6 +1,6 @@
 import pygame
 
-from game.gameobject import Grid, Actor
+from game.gameobject import Grid, Player
 
 
 class Scene:
@@ -33,4 +33,4 @@ class Gui(Scene):
         Scene.__init__(self)
 
         Grid(self.group)
-        Actor(self.group)
+        Player(self.group)

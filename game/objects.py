@@ -22,7 +22,7 @@ class DynamicObject(Object):
 
         Object.__init__(self, source, *groups)
 
-        self.physics = physics.Physics()
+        self.physics = physics.Physics(self.rect)
 
 
     def update(self, *args, **kwargs):
