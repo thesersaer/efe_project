@@ -1,14 +1,26 @@
-import pygame.sprite
-
 import game.scenes.scene as scene
+from game.objects import Object
+from game.gameobject import Actor
 
 
 class Game:
     def __init__(self):
         self.scenes = {}
         self._active_scene = None
+        self.map = Map()
 
-        self.scenes.update({'gui': scene.Gui()})
+        map_obj = Actor(self.map.group)
+        map_obj.maths.velocity.update(0, -0.2, -0.3)
+        self.map.add_object(map_obj)
+
+        self.scenes.update({'ship': scene.Ship()})
+        self.set_active_scene('ship')
+        self.active_scene.map_view.load_seek_group(self.map.group)
+
+
+    @property
+    def active_scene(self):
+        return self.scenes[self._active_scene]
 
     def set_active_scene(self, scene_key):
         if scene_key in self.scenes.keys():
@@ -18,29 +30,18 @@ class Game:
         self.scenes[self._active_scene].update()
 
     def draw(self, display):
-        self.scenes[self._active_scene].draw(display)
+
+        self.active_scene.draw()
+        display.blit(self.active_scene.surface, (0, 0))
 
 
-class Map:
+class Map(scene.Scene):
+
     def __init__(self):
-        pass
+
+        scene.Scene.__init__(self)
 
 
-class ObjectGroup:
-    def __init__(self):
-        self.group = []
-        self._sprite_group = pygame.sprite.Group()
+    def add_object(self, obj: Object):
 
-    def add(self, game_object):
-        self.group.append(game_object)
-        game_object.add(self._sprite_group)
-
-    def remove(self, game_object):
-        self.group.remove(game_object)
-        game_object.remove(self._sprite_group)
-
-    def draw(self, surface):
-        self._sprite_group.draw(surface)
-
-    def update(self):
-        self._sprite_group.update()
+        self.group.add(obj)
