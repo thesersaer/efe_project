@@ -17,7 +17,6 @@ class GameEngine:
         self._game = game.gameclass.Game()
 
     def start(self):
-        self._game.set_active_scene('gui')
 
         self.is_running = True
         self.loop()

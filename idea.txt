@@ -5,3 +5,10 @@ Dos modos:
 
 1. Zoom-in, local y v << c (accel!)
 2. Zoom-out, relativista y v ~ c (accel. nula)
+
+
+CAMERA Y CAMERAVIEWER:
+
+Camera es objeto dinámico con posición y velocidad, maths.rect abarca el campo de visión en coordenadas del mundo
+
+CameraViewer es objeto estático encargado de dibujar el campo de visión de Camera

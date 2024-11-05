@@ -45,6 +45,11 @@ class DirtySprite(pygame.sprite.DirtySprite, ISprite):
         ISprite.__init__(self, source)
 
 
+class Group(pygame.sprite.Group):
+
+    pass
+
+
 
 if __name__ == '__main__':
     foo = Sprite((30, 30))

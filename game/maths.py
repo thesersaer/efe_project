@@ -1,7 +1,7 @@
 import numpy as np
 import pygame
 
-from constants import PHYSICS_TIMESTEP_MS as DT
+from constants import GRID_SIZE, GRID_MEASURE
 
 
 class ISpace:
@@ -55,9 +55,18 @@ class Velocity(Vector3):
 
 class IMath:
 
-    def __init__(self, rect: pygame.Rect):
+    scaling_factor = GRID_MEASURE / GRID_SIZE
 
-        self.rect = rect
+    def __init__(self, sprite_rect: pygame.Rect):
+
+        """
+        :param sprite_rect: Rectangle of the sprite in screen coordinates
+        """
+
+        size_x = self.scaling_factor * sprite_rect.size[0]
+        size_y = self.scaling_factor * sprite_rect.size[1]
+
+        self.rect = pygame.Rect(0., 0., size_x, size_y)
 
         self.position = Position()
 
