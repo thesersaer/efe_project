@@ -10,7 +10,7 @@ GRID_SIZE = 32
 
 # Game-related
 PLAYER_X_RATIO = 1/2
-PLAYER_Y_RATIO = 4/5
+PLAYER_Y_RATIO = 6/7
 GRID_MEASURE = 10      # Correlation between grid size and distance units it represents physically, in light-seconds
 PLAYER_SIZE = (4, 6)
 GRID_COLOR = (35, 35, 35)
