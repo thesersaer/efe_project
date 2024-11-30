@@ -43,32 +43,9 @@ class Grid(StaticObject):
 
 class Camera(TriggerObject):
 
-    def __init__(self, size: tuple[int, int], zoom: float = 1, *groups):
+    def __init__(self, size: tuple[int, int], *groups):
 
         TriggerObject.__init__(self, size, *groups)
-
-        self.zoom = None
-
-        self.set_zoom(zoom)
-
-
-    def seek_group(self, group):
-
-        self.action_group.add(group)
-
-
-    def set_zoom(self, zoom: float):
-
-        self.maths.rect.width *= zoom
-        self.maths.rect.height *= zoom
-
-        self.zoom = zoom
-
-
-    def update(self, *args, **kwargs):
-
-        self.maths.update()
-        self.check_group()
 
 
 class CameraViewer(StaticObject):
@@ -77,24 +54,19 @@ class CameraViewer(StaticObject):
 
         StaticObject.__init__(self, size, *groups)
 
-        self.camera: Optional[Camera] = None
+        self.camera = Camera(size)
 
 
-    def set_camera(self, camera: Optional[Camera] = None):
+    def draw(self, surface):
 
-        self.camera = camera
+        for obj in self.action_group:
 
-
-    def draw(self):
-
-        self.action_group.draw(self.image)
+            obj.draw()
 
 
     def update(self, *args, **kwargs):
 
-        self.maths.update()
-        self.action_group.add(self.camera.check_group())
-
+        pass
 
 
 if __name__ == '__main__':
