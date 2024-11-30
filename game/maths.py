@@ -63,6 +63,8 @@ class IMath:
         :param sprite_rect: Rectangle of the sprite in screen coordinates
         """
 
+        self.sprite_rect = sprite_rect
+
         size_x = self.scaling_factor * sprite_rect.size[0]
         size_y = self.scaling_factor * sprite_rect.size[1]
 
@@ -71,31 +73,80 @@ class IMath:
         self.position = Position()
 
 
-    def update(self):
+    def update(self, *args, **kwargs):
 
-        self.rect.center = (self.position.y, self.position.z)
+        pass
 
 
-class Physics(IMath):
+    def copy(self):
 
-    def __init__(self, rect):
+        imath = IMath(self.sprite_rect.copy())
+        imath.position = self.position.copy()
+        return imath
 
-        IMath.__init__(self, rect)
+
+    def is_within(self, obj_math: 'IMath') -> bool:
+
+        return self.rect.colliderect(obj_math.rect)
+
+
+class IPhysics(IMath):
+
+    def __init__(self, sprite_rect):
+
+        IMath.__init__(self, sprite_rect)
 
         self.velocity = Velocity()
 
 
-    def update(self) -> tuple[int, int]:
+    def update(self, *args, **kwargs):
+
         pass
 
 
-class Logic(IMath):
+    def copy(self) -> 'IPhysics':
 
-    def __init__(self, rect):
+        iph = IPhysics(self.sprite_rect)
+        iph.position = self.position.copy()
+        iph.velocity = self.velocity.copy()
+        return iph
 
-        IMath.__init__(self, rect)
+
+    def bind(self, obj_physics: 'IPhysics'):
+        """
+        Binds the object's motion to that of obj_physics
+        :param obj_physics: IPhysics to be "followed"
+        """
+        self.position = obj_physics.position
+        self.velocity = obj_physics.velocity
+
+
+    def relative_to(self, obj_physics: 'IPhysics'):
+        """
+        Returns a copy of itself with its frame shifted with respect to the obj_physics frame
+        :param obj_physics: Reference Object
+        :return: IPhysics relative object
+        """
+        relative_frame = self.copy()
+        relative_frame.position -= obj_physics.position
+        relative_frame.velocity -= obj_physics.velocity
+        return relative_frame
+
+
+class ILogic(IMath):
+
+    def __init__(self, sprite_rect):
+
+        IMath.__init__(self, sprite_rect)
+
+
+    def update(self, *args, **kwargs):
+
+        pass
+
 
 if __name__ == '__main__':
-    foo = Physics()
+
+    foo = IPhysics()
     bar = foo.position.yz
     print("end")
