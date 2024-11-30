@@ -12,12 +12,22 @@ class Object(sprite.Sprite):
 
         self.action_group = sprite.Group()
 
+    def update(self, *args, **kwargs):
+        self.maths.update(*args, **kwargs)
+
 
 class StaticObject(Object):
 
     def __init__(self, source, *groups):
 
         Object.__init__(self, source, *groups)
+
+        self.maths = m.ILogic(self.rect)
+
+
+    def draw(self, surface):
+
+        pass
 
 
 class DynamicObject(Object):
@@ -26,19 +36,19 @@ class DynamicObject(Object):
 
         Object.__init__(self, source, *groups)
 
-        self.maths = m.Physics(self.rect)
+        self.maths = m.IPhysics(self.rect)
 
 
-    def update(self, *args, **kwargs):
-        self.maths.update()
+    def draw(self, surface):
+
+        pass
 
 
-    def bind_to(self, obj: 'DynamicObject'):
+    def bind(self, obj: 'DynamicObject'):
         """
-        Fixes the current object to the provided object's movement
+        Fixes the object to the provided object's movement
         """
-        self.maths.position  = obj.maths.position
-        self.maths.velocity = obj.maths.velocity
+        self.maths.bind(obj.maths)
 
 
 class TriggerObject(DynamicObject):
@@ -48,22 +58,18 @@ class TriggerObject(DynamicObject):
         DynamicObject.__init__(self, size, *groups)
 
 
-    def is_within(self, obj: Object):
+    def is_within(self, obj: Object) -> bool:
         """
         Checks if passed object is within the camera boundaries
         :param obj: Object to be tested
         :return: Either True if is within or False otherwise
         """
-        if self.maths.rect.colliderect(obj.maths.rect):
-
-            return True
-
-        else: return False
+        return self.maths.is_within(obj.maths)
 
 
     def check_group(self):
         """
-        Checks if any object of the defined seek group is within the camera boundaries
+        Checks if any object of the defined seek group is within the trigger boundaries
         :return: A list of the objects which satisfy the condition
         """
         ret_list = []
