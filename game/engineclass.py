@@ -7,14 +7,14 @@ import game.gameclass
 class GameEngine:
     def __init__(self):
         pygame.init()
-        self._clock = Clock()
+        self.clock = Clock()
         self.screen = Screen()
         self._input_processor = InputProcessor()
         self._input_catcher = InputCatcher()
         self._input_catcher.add_binding('quit', self.stop)
         self.is_running = False
 
-        self._game = game.gameclass.Game()
+        self.game = game.gameclass.Game()
 
     def start(self):
 
@@ -26,29 +26,45 @@ class GameEngine:
 
     def loop(self):
         while self.is_running:
-            lag = self._clock.tick()
+            self.clock.tick()
             code = self._input_processor.read()
             self._input_catcher.execute(code)
 
-            while lag >= constants.PHYSICS_TIMESTEP_MS:
+            while self.clock.lag >= constants.PHYSICS_TIMESTEP_MS:
                 # Physics update / catch-up
-                self._game.update()
-                lag -= constants.PHYSICS_TIMESTEP_MS
+                self.game.update()
+                self.clock.subtract_lag()
 
             # Rendering
-            self._game.draw(self.screen.surface)
+            self.game.draw(self.screen.surface)
             self.screen.flip()
 
 
 class Clock:
+
     def __init__(self):
+
         self._clock = pygame.time.Clock()
         self._lag = 0
 
+
+    @property
+    def lag(self):
+
+        return self._lag
+
+
     def tick(self) -> int:
+
         elapsed = self._clock.tick(constants.RENDER_FRAME_RATE)
         self._lag += elapsed
         return elapsed
+
+
+    def subtract_lag(self):
+
+        self._lag -= constants.PHYSICS_TIMESTEP_MS
+
 
 class Screen:
     def __init__(self):
