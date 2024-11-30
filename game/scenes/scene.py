@@ -16,13 +16,28 @@ class Scene:
 
         self.surface = pygame.Surface((RESOLUTION_X, RESOLUTION_Y))
 
+        self.boot()
 
-    def relative_coord(self, rel_x, rel_y):
 
-        abs_x = int(self.surface.get_width() * rel_x)
-        abs_y = int(self.surface.get_height() * rel_y)
+    def boot(self):
+        """
+        Executes when the scene is created
+        """
+        pass
 
-        return abs_x, abs_y
+
+    def enter(self):
+        """
+        Executes whenever the scene is brought to the screen
+        """
+        pass
+
+
+    def exit(self):
+        """
+        Executes whenever the scene is removed from the screen
+        """
+        pass
 
 
     def update(self):
@@ -42,9 +57,12 @@ class Scene:
         self.surface.blit(scene.surface, (0, 0))
 
 
+    def relative_coord(self, rel_x, rel_y):
 
-    def handle_inputs(self):
-        pass
+        abs_x = int(self.surface.get_width() * rel_x)
+        abs_y = int(self.surface.get_height() * rel_y)
+
+        return abs_x, abs_y
 
 
 class Gui(Scene):
@@ -63,28 +81,11 @@ class Gui(Scene):
 
 class MapView(Scene):
 
-    def __init__(self, size: tuple[int, int]):
+    def __init__(self):
 
         Scene.__init__(self)
 
-        self.camera_viewer = CameraViewer(size, self.group)
-
-
-    def add_camera(self, camera: Camera):
-
-        camera.add(self.group)
-
-
-    def load_seek_group(self, group):
-
-        self.camera_viewer.camera.seek_group(group)
-
-
-    def add_viewer(self, camera_viewer: CameraViewer):
-
-        if not self.camera_viewer:
-            camera_viewer.add(self.group)
-            self.camera_viewer = camera_viewer
+        self.camera_viewer = CameraViewer(self.surface.get_size(), self.group)
 
 
 class Ship(Gui):
@@ -93,17 +94,13 @@ class Ship(Gui):
 
         Gui.__init__(self)
 
-        self.map_view = MapView(self.grid.rect.size)
-
-        camera = Camera(self.grid.rect.size, 1, self.group)
-        self.map_view.camera_viewer.set_camera(camera)
+        self.map_view = MapView()
 
 
     def update(self):
 
         self.map_view.update()
-        Scene.update(self)
-
+        super().update()
 
 
     def draw(self):
@@ -113,4 +110,9 @@ class Ship(Gui):
         self.map_view.draw()
         self.blit_scene(self.map_view)
 
-        Scene.draw(self)
+        super().draw()
+
+__all__ = ['Gui', 'MapView', 'Ship']
+
+if __name__ == '__main__':
+    print(dict)
