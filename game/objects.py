@@ -16,6 +16,11 @@ class Object(sprite.Sprite):
         self.maths.update(*args, **kwargs)
 
 
+    def draw(self, surface):
+
+        pass
+
+
 class StaticObject(Object):
 
     def __init__(self, source, *groups):

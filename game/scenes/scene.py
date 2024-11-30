@@ -57,7 +57,7 @@ class Scene:
         self.surface.blit(scene.surface, (0, 0))
 
 
-    def relative_coord(self, rel_x, rel_y):
+    def abs_coord(self, rel_x, rel_y):
 
         abs_x = int(self.surface.get_width() * rel_x)
         abs_y = int(self.surface.get_height() * rel_y)
@@ -71,12 +71,12 @@ class Gui(Scene):
 
         Scene.__init__(self)
 
-        grid_size = self.relative_coord(0.9, 0.8)
+        grid_size = self.abs_coord(0.9, 0.8)
 
         self.grid = Grid(grid_size, self.group)
-        self.grid.rect.center = self.relative_coord(0.5, 0.55)
+        self.grid.rect.center = self.abs_coord(0.5, 0.55)
 
-        self.player = Player(self.relative_coord(PLAYER_X_RATIO, PLAYER_Y_RATIO), self.group)
+        self.player = Player(self.abs_coord(PLAYER_X_RATIO, PLAYER_Y_RATIO), self.group)
 
 
 class MapView(Scene):
