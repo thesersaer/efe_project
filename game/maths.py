@@ -1,7 +1,7 @@
-import numpy as np
 import pygame
+from PIL.ImageOps import scale
 
-from constants import GRID_SIZE, GRID_MEASURE
+from constants import GRID_SIZE, GRID_MEASURE, PHYSICS_TIMESTEP_MS
 
 
 class ISpace:
@@ -36,13 +36,23 @@ class BaseSpace(ISpace):
 
 
 class Vector3(pygame.math.Vector3):
+
+    scaling_factor = GRID_SIZE / GRID_MEASURE
+
     """
     Base 3-component vector used to describe object information in spacetime.
     x -> t
     y -> x
     z -> y
     """
-    pass
+
+    def screen_coordinates(self):
+        """
+        Returns the vector's components in screen coordinates. The vector must have a coinciding origin with the screen.
+        """
+        vector: pygame.math.Vector3 = self.copy()
+        vector = vector.elementwise() * self.scaling_factor
+        return vector
 
 
 class Position(Vector3):
@@ -53,7 +63,7 @@ class Velocity(Vector3):
     pass
 
 
-class IMath:
+class BaseLogic:
 
     scaling_factor = GRID_MEASURE / GRID_SIZE
 
@@ -70,8 +80,6 @@ class IMath:
 
         self.rect = pygame.Rect(0., 0., size_x, size_y)
 
-        self.position = Position()
-
 
     def update(self, *args, **kwargs):
 
@@ -80,28 +88,29 @@ class IMath:
 
     def copy(self):
 
-        imath = IMath(self.sprite_rect.copy())
-        imath.position = self.position.copy()
+        imath = BaseLogic(self.sprite_rect.copy())
         return imath
 
 
-    def is_within(self, obj_math: 'IMath') -> bool:
+    def is_within(self, obj_math: 'BaseLogic') -> bool:
 
         return self.rect.colliderect(obj_math.rect)
 
 
-class IPhysics(IMath):
+class IPhysics(BaseLogic):
 
     def __init__(self, sprite_rect):
 
-        IMath.__init__(self, sprite_rect)
+        BaseLogic.__init__(self, sprite_rect)
 
+        self.position = Position()
         self.velocity = Velocity()
 
 
     def update(self, *args, **kwargs):
 
-        pass
+        self.position += self.velocity * PHYSICS_TIMESTEP_MS
+        print(self.position)
 
 
     def copy(self) -> 'IPhysics':
@@ -133,11 +142,11 @@ class IPhysics(IMath):
         return relative_frame
 
 
-class ILogic(IMath):
+class IMaths(BaseLogic):
 
     def __init__(self, sprite_rect):
 
-        IMath.__init__(self, sprite_rect)
+        BaseLogic.__init__(self, sprite_rect)
 
 
     def update(self, *args, **kwargs):
@@ -147,6 +156,5 @@ class ILogic(IMath):
 
 if __name__ == '__main__':
 
-    foo = IPhysics()
-    bar = foo.position.yz
-    print("end")
+    foo = Vector3(5, 5, 5)
+    print([int(x) for x in foo.xyz])

@@ -10,7 +10,9 @@ class Scene:
     """
     Stores objects belonging to a scene
     """
-    def __init__(self):
+    def __init__(self, game):
+
+        self.game = game
 
         self.group = pygame.sprite.Group()
 
@@ -40,9 +42,9 @@ class Scene:
         pass
 
 
-    def update(self):
+    def update(self, *args, **kwargs):
 
-        self.group.update()
+        self.group.update(*args, **kwargs)
 
 
     def draw(self):
@@ -67,9 +69,9 @@ class Scene:
 
 class Gui(Scene):
 
-    def __init__(self):
+    def __init__(self, game):
 
-        Scene.__init__(self)
+        Scene.__init__(self, game)
 
         grid_size = self.abs_coord(0.9, 0.8)
 
@@ -81,20 +83,31 @@ class Gui(Scene):
 
 class MapView(Scene):
 
-    def __init__(self):
+    def __init__(self, game):
 
-        Scene.__init__(self)
+        Scene.__init__(self, game)
 
         self.camera_viewer = CameraViewer(self.surface.get_size(), self.group)
 
 
+    def update(self, *args, **kwargs):
+
+        super().update(self.game.world.group)
+
+
+    def draw(self):
+
+        self.camera_viewer.draw_view()
+        super().draw()
+
+
 class Ship(Gui):
 
-    def __init__(self):
+    def __init__(self, game):
 
-        Gui.__init__(self)
+        Gui.__init__(self, game)
 
-        self.map_view = MapView()
+        self.map_view = MapView(game)
 
 
     def update(self):

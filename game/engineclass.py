@@ -9,6 +9,7 @@ class GameEngine:
         pygame.init()
         self.clock = Clock()
         self.screen = Screen()
+        pygame.display.set_caption('EFE_Project')
         self._input_processor = InputProcessor()
         self._input_catcher = InputCatcher()
         self._input_catcher.add_binding('quit', self.stop)
@@ -42,6 +43,7 @@ class GameEngine:
 
 class Clock:
 
+
     def __init__(self):
 
         self._clock = pygame.time.Clock()
@@ -52,6 +54,12 @@ class Clock:
     def lag(self):
 
         return self._lag
+
+
+    @property
+    def interpolation_factor(self):
+
+        return self._lag / constants.PHYSICS_TIMESTEP_MS
 
 
     def tick(self) -> int:
@@ -80,6 +88,10 @@ class Screen:
 
     def blit(self, *args):
         self._screen.blit(*args)
+
+    def clear(self):
+        self._screen.fill((0, 0, 0))
+
 
 class InputProcessor:
     def __init__(self):
